@@ -1,25 +1,31 @@
-import logo from './logo.svg';
 import './App.css';
+import Search from "./components/Search";
+import List from './components/List'
+import {useState} from "react";
+import {getSongs} from "./api";
+
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+    const [songsList, setSongsList] = useState([])
+
+    const handleSubmit = (e, query) => {
+        e.preventDefault();
+        const trimmedQuery = query.trim();
+        getSongs(trimmedQuery)
+            .then(res => {
+                // zakomentirano da možemo provjeriti vrstu podataka i način na koji ih kasnije prikazujemo
+                //console.log(res)
+                setSongsList([...res.results])
+            })
+    }
+
+    return (
+        <div className="App">
+            <Search onHandleSubmit={handleSubmit}/>
+            <List list={songsList}/>
+        </div>
+    );
 }
 
 export default App;
